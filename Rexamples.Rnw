@@ -1,0 +1,141 @@
+%\VignetteIndexEntry{Analysis of bead-summary data}
+%\VignettePackage{beadarray}
+%\VignetteEngine{knitr::knitr}
+
+% To compile this document
+% library('knitr'); rm(list=ls()); knit('beadsummary.Rnw')
+
+\documentclass[12pt]{article}
+\newcommand{\usecase}{\textit{\textbf{Use Case: }}}
+
+<<knitr, echo=FALSE, results="hide">>=
+library("knitr")
+opts_chunk$set(tidy=FALSE,dev="png",fig.show="as.is",
+               fig.width=10,fig.height=6,
+               message=FALSE,eval=TRUE,warning=FALSE,echo=TRUE)
+@ 
+
+<<style, eval=TRUE, echo=F, results="asis">>=
+BiocStyle::latex()
+@
+\usepackage{ifthen} 
+\newboolean{includethis} 
+\setboolean{includethis}{true} 
+\newcommand{\ifinclude}[1]{\ifthenelse{\boolean{includethis}}{#1}{}} 
+
+
+
+\title{Reading and exploring data using R - Examples}
+\author{Mark Dunning}
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{UK Birth Rates}
+
+These data were obtained from \href{http://www.theguardian.com/news/datablog/2011/jun/08/life-expectancy-uk-data-health}{a Guardian blog of June 2011}
+
+\subsection{Reading the data}
+
+We will read the file into R. As a rule-of-thumb, if the extension of the file is \textit{.tsv}, then the \Rfunction{read.delim} function can be used. Assuming that the file is read without error, we should print the first few lines of the file using \Rfunction{head} to check that the contents are as we expect. We can also check the dimensions of the data frame that we have created.
+
+<<>>=
+
+birth <- read.delim("data/UKBirthRate.tsv")
+head(birth)
+dim(birth)
+summary(birth)
+str(birth)
+@
+
+\subsection{Visualisation}
+
+Lets assume that we want to visualise
+
+<<>>=
+plot(birth[,1],birth[,2])
+
+@
+
+\subsubsection{Changing the plot character}
+
+<<>>=
+plot(birth[,1],birth[,2],pch=16)
+@
+
+
+\subsubsection{Changing the plot type}
+
+<<>>=
+plot(birth[,1],birth[,2],type="l")
+
+@
+
+
+\subsubsection{Adding colours}
+
+A complete list of colours can be seen \href{http://www.stat.columbia.edu/\~tzheng/files/Rcolor.pdf}{here}
+
+<<>>=
+plot(birth[,1],birth[,2],type="l",col="steelblue")
+
+@
+
+
+
+\subsubsection{Modifying the labels and title}
+
+
+<<>>=
+plot(birth[,1],birth[,2],xlab="Year",ylab="Births",main="Male birth rate", type="l")
+@
+
+\subsubsection{Adding extra lines and points}
+
+<<>>=
+plot(birth[,1],birth[,2],xlab="Year",ylab="Births",type="l",col="steelblue")
+lines(birth[,1],birth[,3],col="midnightblue")
+@
+
+\subsubsection{Adding a legend}
+
+<<>>=
+plot(birth[,1],birth[,2],xlab="Year",ylab="Births",type="l",col="steelblue")
+lines(birth[,1],birth[,3],col="midnightblue")
+legend("topleft", fill=c("steelblue", "midnightblue"),legend=c("Male", "Female"))
+
+@
+
+\subsubsection{Adding text and points}
+
+<<>>=
+plot(birth[,1],birth[,2],xlab="Year",ylab="Births",type="l",col="steelblue")
+lines(birth[,1],birth[,3],col="midnightblue")
+legend("topleft", fill=c("steelblue", "midnightblue"),legend=c("Male", "Female"))
+events <- which(birth[,4] != "")
+
+points(birth[events,1],birth[events,2],pch=16)
+points(birth[events,1],birth[events,3],pch=16)
+abline(v = birth[events,1])
+text(birth[events,1], 80, birth[events,4],srt=45)
+@
+
+
+\subsection{Statistical analysis}
+
+
+
+\section{Rail station usage}
+These data were obtained from \href{http://www.theguardian.com/news/datablog/2009/jul/02/rail-transport-travelleisure}{a Guardian blog of July 2009}
+
+<<>>=
+stations <- read.csv("data/Station use - 2011-12.csv")
+@
+
+
+<<>>=
+stations$Total <- as.numeric(gsub(",", "",stations$X1112.Entries...Exit))
+@
+
+
+\end{document}

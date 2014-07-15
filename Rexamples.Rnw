@@ -33,7 +33,7 @@ BiocStyle::latex()
 
 \section{UK Birth Rates}
 
-These data were obtained from \href{http://www.theguardian.com/news/datablog/2011/jun/08/life-expectancy-uk-data-health}{a Guardian blog of June 2011}
+These data were obtained from \href{http://www.theguardian.com/news/datablog/2011/jun/08/life-expectancy-uk-data-health}{a Guardian blog of June 2011}. In brieg..
 
 \subsection{Reading the data}
 

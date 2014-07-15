@@ -33,7 +33,7 @@ BiocStyle::latex()
 
 \section{UK Birth Rates}
 
-These data were obtained from \href{http://www.theguardian.com/news/datablog/2011/jun/08/life-expectancy-uk-data-health}{a Guardian blog of June 2011}. In brieg..
+These data were obtained from \href{http://www.theguardian.com/news/datablog/2011/jun/08/life-expectancy-uk-data-health}{a Guardian blog of June 2011}
 
 \subsection{Reading the data}
 
@@ -129,13 +129,30 @@ text(birth[events,1], 80, birth[events,4],srt=45)
 These data were obtained from \href{http://www.theguardian.com/news/datablog/2009/jul/02/rail-transport-travelleisure}{a Guardian blog of July 2009}
 
 <<>>=
-stations <- read.csv("data/Station use - 2011-12.csv")
+stations <- read.csv("data/Station use - 2011-12.csv",stringsAsFactors=FALSE)
+head(stations)
 @
 
+Suppose we are interested in which stations are most / least busy. A measure of this is given in the column 'X1112.Entries...Exits'. However, this is a bit messay so we will create a new variable with the same data. 
+<<>>=
+stations$Total <- stations$X1112.Entries...Exits
+@
+
+Now try and find the station with the most exits and entrances using the \Rfunction{max} and \Rfunction{which.max}. Does the answer look correct to you? What has gone wrong?
 
 <<>>=
-stations$Total <- as.numeric(gsub(",", "",stations$X1112.Entries...Exit))
+max(stations$Total)
 @
+
+The problem arises because the numbers in the original file had comma separators in them. 
+<<>>=
+stations$Total <- as.numeric(gsub(",", "",stations$Total))
+
+max(stations$Total)
+stations[which.max(stations$Total),]
+@
+
+
 
 
 \end{document}
